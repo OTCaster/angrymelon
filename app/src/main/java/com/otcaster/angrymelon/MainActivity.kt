@@ -21,7 +21,7 @@ import java.time.DayOfWeek
 
 @AndroidEntryPoint class MainActivity : ComponentActivity() { override fun onCreate(state: Bundle?) { super.onCreate(state); setContent { CadenceTheme { CadenceApp() } } } }
 private enum class Destination(val label: String) { TODAY("Today"), WEEK("Week"), COURSES("Courses"), SETTINGS("Settings") }
-@OptIn(ExperimentalMaterial3Api::class) @Composable private fun CadenceApp(vm: TimetableViewModel = hiltViewModel()) {
+@Composable private fun CadenceApp(vm: TimetableViewModel = hiltViewModel()) {
     val ui by vm.state.collectAsState(); var destination by remember { mutableStateOf(Destination.TODAY) }; var adding by remember { mutableStateOf(false) }
     Scaffold(topBar = { TopAppBar(title = { Text(ui.semester?.name ?: "Cadence") }) }, bottomBar = { NavigationBar { Destination.entries.forEach { page -> NavigationBarItem(selected = page == destination, onClick = { destination = page }, icon = { Icon(if (page == Destination.TODAY) Icons.Outlined.Home else if (page == Destination.WEEK) Icons.Outlined.CalendarMonth else if (page == Destination.COURSES) Icons.Outlined.MenuBook else Icons.Outlined.Settings, page.label) }, label = { Text(page.label) }) } } }, floatingActionButton = { if (destination != Destination.SETTINGS) FloatingActionButton(onClick = { adding = true }) { Icon(Icons.Outlined.Add, "Add") } }) { padding ->
         Box(Modifier.padding(padding)) { if (ui.semester == null) Onboarding(vm) else when(destination) { Destination.TODAY -> Today(ui.sessions); Destination.WEEK -> Week(ui.sessions); Destination.COURSES -> Courses(ui.courses.map { it.name to it.code }); Destination.SETTINGS -> Settings() }

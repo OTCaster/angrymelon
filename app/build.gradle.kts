@@ -11,7 +11,7 @@ android { namespace = "com.otcaster.angrymelon"; compileSdk = 35
     buildFeatures { compose = true; buildConfig = true }
 }
 
-kotlin { jvmToolchain(21) }
+kotlin { jvmToolchain(17) }
 
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2024.09.03"))
